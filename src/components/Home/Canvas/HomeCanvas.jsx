@@ -42,8 +42,8 @@ export const HomeCanvas = () => {
                 drawWidth = canvasHeight * imageAspectRatio;
                 drawHeight = canvasHeight;
             }
-            const imageOffsetX = canvasWidth * 0.1;
-            const imageOffsetY = canvasHeight * 0.2;
+            const imageOffsetX = canvasWidth * 0.3;
+            const imageOffsetY = canvasHeight * 0.3;
             // Calculate position to center the image
             const x = ((canvasWidth - drawWidth) / 2 + xOffset) + imageOffsetX;
             const y = ((canvasHeight - drawHeight) / 2) + imageOffsetY; 
@@ -210,11 +210,11 @@ export const HomeCanvas = () => {
         };
         
         const render = (timestamp) => {
-            const pixelRatio = window.devicePixelRatio || 1; // Default to 1 if undefined
-
+            console.log(window.devicePixelRatio)
+            const pixelRatio = 1; // Default to 1 if undefined
             // Adjust the canvas size for the pixel ratio
-            canvas.width = canvas.offsetWidth * pixelRatio;
-            canvas.height = canvas.offsetHeight * pixelRatio;
+            canvas.width = canvas.width * pixelRatio;
+            canvas.height = canvas.height * pixelRatio;
 
             // Adjust drawing scale
             ctx.scale(pixelRatio, pixelRatio);

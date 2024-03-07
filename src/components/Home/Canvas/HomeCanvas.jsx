@@ -36,19 +36,17 @@ export const HomeCanvas = () => {
             let drawHeight = canvasHeight;
 
             if (imageAspectRatio > canvasAspectRatio) {
-                console.log("ibig")
                 drawWidth = canvasWidth ;
                 drawHeight = canvasWidth / imageAspectRatio;
             } else {
-                console.log("abig")
-
                 drawWidth = canvasHeight * imageAspectRatio;
                 drawHeight = canvasHeight;
             }
-
+            const imageOffsetX = canvasWidth * 0.1;
+            const imageOffsetY = canvasHeight * 0.2;
             // Calculate position to center the image
-            const x = (canvasWidth - drawWidth/3) / 2 +xOffset;
-            const y = (canvasHeight - drawHeight/1.5); 
+            const x = ((canvasWidth - drawWidth) / 2 + xOffset) + imageOffsetX;
+            const y = ((canvasHeight - drawHeight) / 2) + imageOffsetY; 
 
             // Draw the image with calculated dimensions and position
             ctx.drawImage(image, x, y, drawWidth/1.2, drawHeight/1.2);

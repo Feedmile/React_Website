@@ -25,7 +25,7 @@ export const HomeCanvas = () => {
         }
     };
     const drawCharacterImage = (ctx,canvas,image,xOffset) => {
-        
+            
         
             const canvasWidth = canvas.width;
             const canvasHeight = canvas.height;
@@ -210,6 +210,14 @@ export const HomeCanvas = () => {
         };
         
         const render = (timestamp) => {
+            const pixelRatio = window.devicePixelRatio || 1; // Default to 1 if undefined
+
+            // Adjust the canvas size for the pixel ratio
+            canvas.width = canvas.offsetWidth * pixelRatio;
+            canvas.height = canvas.offsetHeight * pixelRatio;
+
+            // Adjust drawing scale
+            ctx.scale(pixelRatio, pixelRatio);
             const parallaxOffset = mouseXOffsetRef.current * 0.2;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             

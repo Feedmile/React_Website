@@ -148,6 +148,7 @@ export const HomeCanvas = () => {
         let birdFrameIndex = 0;
         let birdX = 0;
         let lastFrameTime = 0;
+        let lastRenderTime = 0;
         const frameDuration = 200; // Duration of each frame in milliseconds
         const mountainImage = new Image();
         const characterImage = new Image();
@@ -205,18 +206,17 @@ export const HomeCanvas = () => {
                 cloudSpeed = canvas.width * 0.0001;
                 cloudX = canvas.width;
                 birdX = canvas.width;
-                render();
+                render(performance.now());
             }
         };
         
         const render = (timestamp) => {
-            console.log(window.devicePixelRatio)
-            const pixelRatio = 1; // Default to 1 if undefined
-            // Adjust the canvas size for the pixel ratio
+            const pixelRatio = 1;
+            if(!lastRenderTime) lastRenderTime = timestamp;
+            const deltaTime = (timestamp - lastRenderTime) / 1000;
+            lastRenderTime = timestamp;
             canvas.width = canvas.width * pixelRatio;
             canvas.height = canvas.height * pixelRatio;
-
-            // Adjust drawing scale
             ctx.scale(pixelRatio, pixelRatio);
             const parallaxOffset = mouseXOffsetRef.current * 0.2;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -225,18 +225,19 @@ export const HomeCanvas = () => {
             drawBigBirdGroupImage(ctx,canvas,bigBirdGroupImage,birdFrameIndex,birdX)
             drawCloudGroupImage(ctx,canvas,clouds[cloudIndex], cloudX);
             drawCharacterImage(ctx,canvas,characterImage,parallaxOffset);
-            cloudX -= cloudSpeed/2;
-            birdX -= cloudSpeed * 1.5;
+            cloudX -= (cloudSpeed * 100) * deltaTime  ;
+            
+            
+            birdX -= (cloudSpeed * 200) * deltaTime;
 
             if (cloudX < -600) {
-                cloudX = canvas.width ; // Reset X position
-                cloudIndex = (cloudIndex + 1) % clouds.length; // Move to next cloud image
+                cloudX = canvas.width ;
+                cloudIndex = (cloudIndex + 1) % clouds.length;
             }
             if (birdX < -115) {
                 birdX = canvas.width +115;
             }
             
-            // Update bird animation frame
             if (timestamp - lastFrameTime > frameDuration) {
                 birdFrameIndex = (birdFrameIndex + 1) % 3;
                 lastFrameTime = timestamp;

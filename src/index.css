@@ -1,0 +1,7 @@
+:root {
+  --main-bg-color: white; /* Replace with your desired color */
+}
+html,body{
+  margin: 0;
+  padding: 0;
+}

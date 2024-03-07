@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&family=Inter:wght@300;500;700&display=swap');
+
+:root {
+    --nav-bg: rgb(0, 0, 0);
+  }
+  .canvas{
+    position: absolute;
+    left: 0;
+    width: 0%;
+    height: 0%;
+  }
+  .canvas.active.bottom{
+    position: absolute;
+    bottom:0;
+    left: 0;
+    width: 100%;
+    height: 250%;
+    top: unset;
+  }
+  .canvas.active.top{
+    position: absolute;
+    bottom: unset;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 250%;
+  }
+  nav {
+    background: var(--nav-bg); 
+    position: fixed;
+    left: 0;
+    right: 0;
+    top:0;
+    transition: transform 0.5s ease;
+    z-index: 100; /* Transition for transform */
+  } 
+  nav.bottom {
+    transform: translateY(calc(100vh - 100%)); /* Moves the navbar to the bottom */
+  }
+  nav.top {
+    transform: translateY(0);
+  }
+  .nav-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex; 
+    justify-content: center;
+
+  }
+  .nav-list a {
+    color: white;
+    text-decoration: none;  
+    font-family: 'Inter', sans-serif;
+  }
+  .nav-list li {
+    position: relative;
+    padding-inline: 2dvw;
+    margin-inline: 5dvw 0;
+    padding-block: .5rem;
+  }
+  nav.top .nav-list li {
+    margin-bottom: -.2rem;
+  }
+  nav.bottom .nav-list li {
+    margin-top: -.2rem;  }
+  
+  .nav-list li.active {
+    background: var(--main-bg-color);
+  }  
+  .nav-list li.active a {
+    color: rgb(0, 0, 0);
+  }
+
+   .nav-list li.active::before{
+    --border-radius: 1rem;
+    content: "";
+    position: absolute;
+    width: var(--border-radius);
+    height: var(--border-radius);
+    left: -1rem;
+    top: .195rem;
+    background: var(--nav-bg);
+    border-radius: 0 var(--border-radius) 0 0;
+    box-shadow: .25rem -5px 0 .2rem var(--main-bg-color);
+  }
+  .nav-list li.active::after {
+    --border-radius: 1rem;
+    content: "";
+    position: absolute;
+    width: var(--border-radius);
+    height: var(--border-radius);
+    right: -1rem;
+    top: .2rem;
+    background:   var(--nav-bg);
+    border-radius: var(--border-radius) 0 0 0;
+    box-shadow: -.25rem -5px 0 .2rem var(--main-bg-color)
+  }
+  nav.top .nav-list li.active::before {
+    top:unset;
+    bottom: .2rem;
+    border-radius:  0 0 var(--border-radius) 0;
+    box-shadow: .25rem 5px 0 .2rem var(--main-bg-color);
+  }
+  nav.top .nav-list li.active::after {
+    top:unset;
+    bottom: .2rem;
+    border-radius: 0  0   0 var(--border-radius);
+    box-shadow: -.25rem 5px 0 .2rem var(--main-bg-color) 
+  } 
+ 
+  

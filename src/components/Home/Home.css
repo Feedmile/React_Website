@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&family=Inter:wght@300;500;700&display=swap');
+.homeCanvas{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+.text-container{
+    z-index: 100;
+    position: absolute;
+    top:25%;
+    left: 25%;
+    width: 50%;
+    height: 50%;
+    
+}
+.textured-div {
+    position: absolute;
+    width: 60%;
+    height: 50%;
+    top: 35%;
+    left: 46%;
+    background: repeating-linear-gradient(
+        45deg,
+        #d1d0d0,
+        #d1d0d0 1px,
+        transparent 3px,
+        transparent 5px
+    );
+    
+}
+.serif-text, .textured-div {
+    transition: left 0.2s, right 0.2s;
+    position: absolute;
+  }
+.serif-text {
+    position: absolute;
+    z-index: 3;
+    pointer-events: none;
+    top:25%;
+    left: 25%;
+    font-weight: 500;
+    font-size: 2.8vw;
+    font-family: 'Inter', sans-serif;
+    text-shadow: 
+    -1px -1px 0 #fff,  
+     1px -1px 0 #fff,
+    -1px  1px 0 #fff,
+     1px  1px 0 #fff;
+}
+.secondLine{
+    margin-top: -10%;
+}
+.name{
+    font-weight: 700;
+    font-size: 3.2vw;
+    margin-left: 1rem;
+}
+.thirdLine{
+    font-size: 1.5vw;
+}
+.rank{
+    font-size: 1.5vw;
+
+    font-weight: 700;
+}

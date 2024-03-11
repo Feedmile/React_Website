@@ -16,7 +16,7 @@
     height: 50%;
     
 }
-.textured-div {
+.tetxtured-div {
     position: absolute;
     width: 60%;
     height: 50%;
@@ -63,6 +63,19 @@
 }
 .rank{
     font-size: 1.5vw;
-
+    margin-left: 2rem;
+    margin-right: 1rem;
     font-weight: 700;
 }
+
+.text-animation {
+    animation: slideUp 0.5s ease-out forwards;
+  }
+  @keyframes slideUp {
+    from {
+      transform: translateY(120%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }

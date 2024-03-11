@@ -13,7 +13,7 @@ export const Navbar = (props) => {
         setActiveItem(null);
     };
   return (
-    <nav className={'top'}>
+    <nav className={'top navbar-animation'}>
       <ul className="nav-list">
         {['Home', 'About', 'Experiences', 'Games'].map((item, index) => (
           <li

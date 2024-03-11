@@ -10,8 +10,6 @@ import BigBirdGroupImage from '../../../assets/spritesheets/big_bird_group_115x8
 
 export const HomeCanvas = () => {
     const canvasRef = useRef(null);
-    const [mouseXOffset, setMouseXOffset] = useState(0);
-    const mouseXOffsetRef = useRef(mouseXOffset); 
     const [scale, setScale] = useState(1);
     
     const resizeCanvas = (canvas) => {
@@ -24,7 +22,7 @@ export const HomeCanvas = () => {
             context.scale(dpr, dpr);
         }
     };
-    const drawCharacterImage = (ctx,canvas,image,xOffset) => {
+    const drawCharacterImage = (ctx,canvas,image,xOffset,startMove) => {
             
         
             const canvasWidth = canvas.width;
@@ -43,15 +41,15 @@ export const HomeCanvas = () => {
                 drawHeight = canvasHeight;
             }
             const imageOffsetX = canvasWidth * 0.3;
-            const imageOffsetY = canvasHeight * 0.3;
+            const imageOffsetY = (canvasHeight + drawHeight) * 0.05;
             // Calculate position to center the image
-            const x = ((canvasWidth - drawWidth) / 2 + xOffset) + imageOffsetX;
-            const y = ((canvasHeight - drawHeight) / 2) + imageOffsetY; 
+            const x = ((canvasWidth - drawWidth) / 2 + xOffset*2 + startMove) + imageOffsetX;
+            const y = canvasHeight - drawHeight /2 - imageOffsetY; 
 
             // Draw the image with calculated dimensions and position
             ctx.drawImage(image, x, y, drawWidth/1.2, drawHeight/1.2);
     };
-    const drawMountainImage = (ctx,canvas,image,xOffset) => {
+    const drawMountainImage = (ctx,canvas,image,xOffset,startMove) => {
         const canvasWidth = canvas.width;
         const canvasHeight = canvas.height;
 
@@ -68,10 +66,11 @@ export const HomeCanvas = () => {
             drawWidth = canvasHeight * imageAspectRatio;
             drawHeight = canvasHeight;
         }
-
+        const imageOffsetX = canvasWidth * 0.35;
+        const imageOffsetY = (canvasHeight + drawHeight) * 0.15;
         // Calculate position to center the image
-        const x = (canvasWidth - drawWidth*2) / 2 + -xOffset;
-        const y = (canvasHeight - drawHeight) / 2;
+        const x = ((canvasWidth - drawWidth) / 2 + -xOffset*3 + startMove) - imageOffsetX;
+        const y = canvasHeight - drawHeight / 2 - imageOffsetY;
         ctx.drawImage(image, x, y, drawWidth, drawHeight);
 
     }
@@ -94,9 +93,36 @@ export const HomeCanvas = () => {
         }
 
         // Calculate position to center the image
-        
-        const x = ((canvasWidth - drawWidth) / 2) +  Xposition ;
-        const y = (canvasHeight - drawHeight) / 5;
+        const imageOffsetX = canvasWidth * 0.3;
+        const imageOffsetY = (canvasHeight + drawHeight) * 0.34;
+        const x = (((canvasWidth - drawWidth) / 2) +  Xposition) - imageOffsetX ;
+        const y = canvasHeight - drawHeight / 2 - imageOffsetY;
+        ctx.drawImage(image, x, y, drawWidth/ 3, drawHeight/ 3);
+
+    }
+    const drawCloudGroupImageForSmallScreens = (ctx,canvas,image,Xposition) => {
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+
+        const imageAspectRatio = image.width / image.height;
+        const canvasAspectRatio = canvasWidth / canvasHeight;
+
+        let drawWidth = canvasWidth;
+        let drawHeight = canvasHeight;
+
+        if (imageAspectRatio > canvasAspectRatio) {
+            drawWidth = canvasWidth;
+            drawHeight = canvasWidth / imageAspectRatio;
+        } else {
+            drawWidth = canvasHeight * imageAspectRatio;
+            drawHeight = canvasHeight;
+        }
+
+        // Calculate position to center the image
+        const imageOffsetX = canvasWidth * 0.8;
+        const imageOffsetY = (canvasHeight + drawHeight) * 0.6;
+        const x = (((canvasWidth - drawWidth) / 2) +  Xposition) - imageOffsetX ;
+        const y = canvasHeight - drawHeight / 2 - imageOffsetY;
         ctx.drawImage(image, x, y, drawWidth/ 3, drawHeight/ 3);
 
     }
@@ -119,29 +145,20 @@ export const HomeCanvas = () => {
         }
 
         // Calculate position to center the image
-        
-        const x = ((canvasWidth - drawWidth)) + Xposition ;
-        const y = (canvasHeight - drawHeight) / 5;
+        const imageOffsetX = canvasWidth * 0.05;
+        const imageOffsetY = (canvasHeight + drawHeight) * 0.4;
+        const x = ((canvasWidth - drawWidth) / 2 + Xposition) + imageOffsetX ;
+        const y = canvasHeight - drawHeight / 2 - imageOffsetY;
         ctx.save();
         ctx.scale(-1, 1);
         ctx.drawImage(image,birdFrameIndex * 115,0,115,85, -x, y, drawWidth / 25, drawHeight / 15);
         ctx.restore();
     }
     useEffect(() => {
-        mouseXOffsetRef.current = mouseXOffset;
-        const newScale = 1 + mouseXOffset /1000; 
-        setScale(Math.max(.5, Math.min(2, newScale)));
-    }, [mouseXOffset]);
-    useEffect(() => {
-        const handleMouseMove = (event) => {
-            const movementX = event.clientX - window.innerWidth / 2;
-            setMouseXOffset(movementX * 0.05); // Adjust multiplier as needed
-        };
-    
-        window.addEventListener('mousemove', handleMouseMove);
-        return () => window.removeEventListener('mousemove', handleMouseMove);
-    }, []);
-    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        const timer = setTimeout(() => {
+            document.body.style.overflow = 'auto';
+          }, 500);
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d'); 
         let animationFrameId;
@@ -164,8 +181,13 @@ export const HomeCanvas = () => {
         let bigBirdGroupImageLoaded = false;
         let clouds = [];
         let cloudIndex = 0;
+        let cloudIndexSmall = 1;
         let cloudX = 0; 
         let cloudSpeed = 0;
+        let move = 0;
+        let startMoveLeft = 0;
+        let startMoveRight = 0; 
+        let start = true;
         
         mountainImage.onload = () => {
             mountainImageLoaded = true;
@@ -198,14 +220,17 @@ export const HomeCanvas = () => {
         mountainImage.src = MountainImage;
         characterImage.src = CharacterImage;
         bigBirdGroupImage.src = BigBirdGroupImage;
+
        
         const startRendering = () => {
-            if (mountainImageLoaded && characterImageLoaded && cloud_groupImageLoaded && cloudImageLoaded && smallCloudGroupImageLoaded && bigBirdGroupImageLoaded) {
+            if (mountainImageLoaded && characterImageLoaded  && cloud_groupImageLoaded && cloudImageLoaded && smallCloudGroupImageLoaded && bigBirdGroupImageLoaded) {
                 clouds = [cloud_groupImage,cloudImage,smallCloudGroupImage];
                 resizeCanvas(canvas);
                 cloudSpeed = canvas.width * 0.0001;
                 cloudX = canvas.width;
                 birdX = canvas.width;
+                startMoveLeft = -canvas.width/2;
+                startMoveRight = canvas.width/2;
                 render(performance.now());
             }
         };
@@ -218,21 +243,33 @@ export const HomeCanvas = () => {
             canvas.width = canvas.width * pixelRatio;
             canvas.height = canvas.height * pixelRatio;
             ctx.scale(pixelRatio, pixelRatio);
-            const parallaxOffset = mouseXOffsetRef.current * 0.2;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            drawMountainImage(ctx,canvas,mountainImage,parallaxOffset);
+           
+            drawMountainImage(ctx,canvas,mountainImage,move,startMoveLeft);
             drawBigBirdGroupImage(ctx,canvas,bigBirdGroupImage,birdFrameIndex,birdX)
             drawCloudGroupImage(ctx,canvas,clouds[cloudIndex], cloudX);
-            drawCharacterImage(ctx,canvas,characterImage,parallaxOffset);
-            cloudX -= (cloudSpeed * 100) * deltaTime  ;
-            
+            drawCloudGroupImageForSmallScreens(ctx,canvas,clouds[cloudIndexSmall], cloudX);
+            drawCharacterImage(ctx,canvas,characterImage,move,startMoveRight);
+            cloudX -= (cloudSpeed * 50) * deltaTime;
+            if(startMoveRight < 0){
+                start = false;
+            }
+            if(start == true){
+                startMoveLeft += canvas.width * deltaTime;
+                startMoveRight -= canvas.width * deltaTime;
+            }
+            if(move < canvas.width/50 && start == false){
+                const newScale = 1 + (move*3 )/1000; 
+                setScale(Math.max(.5, Math.min(2, newScale)));
+                move += 3 * deltaTime
+            }
             
             birdX -= (cloudSpeed * 200) * deltaTime;
 
             if (cloudX < -600) {
-                cloudX = canvas.width ;
+                cloudX = canvas.width + clouds[cloudIndex].width/2 ;
                 cloudIndex = (cloudIndex + 1) % clouds.length;
+                cloudIndexSmall = (cloudIndex + 1) % clouds.length;
             }
             if (birdX < -115) {
                 birdX = canvas.width +115;
@@ -249,12 +286,14 @@ export const HomeCanvas = () => {
         
         return () => {
             cancelAnimationFrame(animationFrameId);
+            clearTimeout(timer);
+            document.body.style.overflow = 'auto';
         };
     }, []);
 
     return( <div>
                 <canvas className='homeCanvas' ref={canvasRef} />
-                <div className='text-container' style={{ transform: `scale(${scale})` }} >
+                <div className='text-container text-animation' style={{ transform: `scale(${scale})` }} >
                 <div className="textured-div" ></div>
                     <div className="serif-text" >
                         <p>

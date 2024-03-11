@@ -4,6 +4,9 @@ import './Home.css'
 
 export const Home = () => {
   return (
-    <HomeCanvas></HomeCanvas>
+    <div>
+      <HomeCanvas></HomeCanvas>
+    </div>
+
   )
 }

@@ -108,5 +108,15 @@
     border-radius: 0  0   0 var(--border-radius);
     box-shadow: -.25rem 5px 0 .2rem var(--main-bg-color) 
   } 
- 
+  .navbar-animation {
+    animation: slideDown 0.5s ease-out forwards;
+  }
+  @keyframes slideDown {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
   
